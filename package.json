@@ -1,0 +1,35 @@
+{
+    "name": "wechat-robot",
+    "version": "0.1.0",
+    "description": "Kaiyuanshe wechat robot",
+    "main": "bot.js",
+    "engines": {
+      "node": ">= 10"
+    },
+    "scripts": {
+      "postinstall": "check-node-version --node \">= 10\"",
+      "start": "node bot.js"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/kaiyuanshe/wechat-robot.git"
+    },
+    "keywords": [],
+    "author": "Zhuang Biaowei <zhuangbiaowei@gmail.com>",
+    "license": "Apache 2.0",
+    "bugs": {
+      "url": "https://github.com/kaiyuanshe/wechat-robot/issues"
+    },
+    "homepage": "https://github.com/kaiyuanshe/wechat-robot#readme",
+    "dependencies": {
+      "qrcode-terminal": "^0.12.0",
+      "request": "^2.88.0",
+      "wechaty": "^0.22.1",
+      "wechaty-puppet-padchat": "^0.17.21",
+      "xml2js": "^0.4.19"
+    },
+    "devDependencies": {
+      "check-node-version": "^3.2.0"
+    }
+  }
+  

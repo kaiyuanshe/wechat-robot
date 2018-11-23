@@ -1,35 +1,36 @@
 {
-    "name": "wechat-robot",
-    "version": "0.1.0",
-    "description": "Kaiyuanshe wechat robot",
-    "main": "bot.js",
-    "engines": {
-      "node": ">= 10"
-    },
-    "scripts": {
-      "postinstall": "check-node-version --node \">= 10\"",
-      "start": "node bot.js"
-    },
-    "repository": {
-      "type": "git",
-      "url": "git+https://github.com/kaiyuanshe/wechat-robot.git"
-    },
-    "keywords": [],
-    "author": "Zhuang Biaowei <zhuangbiaowei@gmail.com>",
-    "license": "Apache 2.0",
-    "bugs": {
-      "url": "https://github.com/kaiyuanshe/wechat-robot/issues"
-    },
-    "homepage": "https://github.com/kaiyuanshe/wechat-robot#readme",
-    "dependencies": {
-      "qrcode-terminal": "^0.12.0",
-      "request": "^2.88.0",
-      "wechaty": "^0.22.1",
-      "wechaty-puppet-padchat": "^0.17.21",
-      "xml2js": "^0.4.19"
-    },
-    "devDependencies": {
-      "check-node-version": "^3.2.0"
-    }
+  "name": "wechaty-getting-started",
+  "version": "0.1.0",
+  "description": "Wechaty is a Wechat Bot SDK for Personal Account in Node.js",
+  "main": "index.js",
+  "engines": {
+    "node": ">= 10"
+  },
+  "scripts": {
+    "postinstall": "check-node-version --node \">= 10\"",
+    "start": "node examples/starter-bot.js",
+    "test": "node tests/smoke-testing.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Chatie/wechaty-getting-started.git"
+  },
+  "keywords": [],
+  "author": "Huan LI <zixia@zixia.net>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Chatie/wechaty-getting-started/issues"
+  },
+  "homepage": "https://github.com/Chatie/wechaty-getting-started#readme",
+  "dependencies": {
+    "qrcode-terminal": "^0.12.0",
+    "request": "^2.88.0",
+    "simple-git": "^1.107.0",
+    "wechaty": "^0.22.1",
+    "wechaty-puppet-padchat": "^0.17.21",
+    "xml2js": "^0.4.19"
+  },
+  "devDependencies": {
+    "check-node-version": "^3.2.0"
   }
-  
+}

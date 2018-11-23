@@ -3,6 +3,7 @@ const { PuppetPadchat } = require('wechaty-puppet-padchat');
 const QRCode = require('qrcode-terminal');
 const Parser = require('./msg-parser');
 const GitterUtils = require('./gitter-utils');
+const Dialog = require('./dialog');
 
 const puppet = new PuppetPadchat();
 
@@ -37,14 +38,29 @@ async function onMessage(msg) {
         if (msg.room() != null && msg.payload.type != bot.Message.Type.Unknown) {
             var msg_text = await Parser.getMsgText(bot, msg);
             GitterUtils.sendMsgToGitter(msg, msg_text);
-        }
+        } else if (msg.payload.type != bot.Message.Type.Unknown && msg.from().name() != "开源社-bot") {
+	    var msg_text = await Parser.getMsgText(bot, msg);
+	    console.log(msg_text);
+	    var reply = Dialog.getReply(msg_text);
+	    msg.say(reply);
+	}
     }
+}
+
+async function onFriendship(friendship){
+  console.log(friendship.toString());
+  if (friendship.type() == bot.Friendship.Type.Receive){
+    await friendship.accept();
+  } else if (friendship.type() == bot.Friendship.Type.Confirm){
+    friendship.contact().say(Dialog.greeting);
+  }
 }
 
 bot.on('scan', onScan);
 bot.on('login', onLogin);
 bot.on('logout', onLogout);
 bot.on('message', onMessage);
+bot.on('friendship', onFriendship);
 
 bot.start()
     .then(() => console.log('Starter Bot Started.'))

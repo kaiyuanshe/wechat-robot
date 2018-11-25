@@ -14,6 +14,8 @@ exports.getReply = function (msg) {
       return "开源社官网，以博客和新闻为主的静态网站。项目地址：  https://github.com/kaiyuanshe/kaiyuanshe";
     case "#project 4":
       return "开源社微信机器人，一个探索型项目，尝试基于微信机器人，与更多的开源爱好者沟通，并提高吸纳新成员的效率。项目地址：  https://github.com/kaiyuanshe/wechat-robot";
+    case "#about":
+      return "开源社微信机器人，一个探索型项目，尝试基于微信机器人，与更多的开源爱好者沟通，并提高吸纳新成员的效率。项目地址：  https://github.com/kaiyuanshe/wechat-robot";
     default:
       return "输入help可以查看如何与我交流。";
   }

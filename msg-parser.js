@@ -30,12 +30,12 @@ exports.getMsgText = async function (bot, msg) {
         msg_text = "![image](" + img_url + ")";
     }
     if (msg.payload.type == bot.Message.Type.Emoticon) {
-        var json = getJson(msg.text());
+        var json = this.getJson(msg.text());
         img_url = json.msg.emoji[0]["$"].cdnurl;
         msg_text = "![image](" + img_url + ")";
     }
     if (msg.payload.type == bot.Message.Type.Url) {
-        var json = getJson(msg.text());
+        var json = this.getJson(msg.text());
         var title = json.msg.appmsg[0].title[0];
         var url = json.msg.appmsg[0].url[0];
         msg_text = "[" + title + "](" + url + ")";

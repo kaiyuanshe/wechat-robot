@@ -39,21 +39,29 @@ async function onMessage(msg) {
             var msg_text = await Parser.getMsgText(bot, msg);
             GitterUtils.sendMsgToGitter(msg, msg_text);
         } else if (msg.payload.type != bot.Message.Type.Unknown && msg.from().name() != "开源社-bot") {
-	    var msg_text = await Parser.getMsgText(bot, msg);
-	    console.log(msg_text);
-	    var reply = Dialog.getReply(msg_text);
-	    msg.say(reply);
-	}
+            var msg_text = await Parser.getMsgText(bot, msg);
+            console.log(msg_text);
+            if (msg_text.slice(0, 6) == '#join ') {
+                msg_text = msg_text.slice(6);
+                var room = await bot.Room.find({topic: '开源社迎新群'}); 
+                room.add(msg.from());
+                room.say("欢迎新朋友："+msg.from().name());
+                room.say(msg.from().name()+"的自我介绍："+msg_text);
+            } else {
+                var reply = Dialog.getReply(msg_text);
+                msg.say(reply);
+            }
+        }
     }
 }
 
-async function onFriendship(friendship){
-  console.log(friendship.toString());
-  if (friendship.type() == bot.Friendship.Type.Receive){
-    await friendship.accept();
-  } else if (friendship.type() == bot.Friendship.Type.Confirm){
-    friendship.contact().say(Dialog.greeting);
-  }
+async function onFriendship(friendship) {
+    console.log(friendship.toString());
+    if (friendship.type() == bot.Friendship.Type.Receive) {
+        await friendship.accept();
+    } else if (friendship.type() == bot.Friendship.Type.Confirm) {
+        friendship.contact().say(Dialog.greeting);
+    }
 }
 
 bot.on('scan', onScan);

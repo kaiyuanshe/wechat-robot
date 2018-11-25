@@ -26,7 +26,7 @@ exports.saveMessageFiles = async function (bot, msg) {
 exports.getMsgText = async function (bot, msg) {
     msg_text = msg.text();
     if (msg.payload.type == bot.Message.Type.Image) {
-        img_url = await saveMessageFiles(bot, msg).catch(error => console.log(error.message));
+        img_url = await this.saveMessageFiles(bot, msg).catch(error => console.log(error.message));
         msg_text = "![image](" + img_url + ")";
     }
     if (msg.payload.type == bot.Message.Type.Emoticon) {

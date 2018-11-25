@@ -43,14 +43,14 @@ async function onMessage(msg) {
             console.log(msg_text);
             if (msg_text.slice(0, 6) == '#join ') {
                 msg_text = msg_text.slice(6);
-                var room = await bot.Room.find({topic: '开源社迎新群'}); 
-		if(room){
-                  await room.add(msg.from());
-                  await room.say("欢迎新朋友："+msg.from().name());
-                  await room.say(msg.from().name()+"的自我介绍："+msg_text);
-		} else {
-		  console.log("没有找到房间");
-		}
+                var room = await bot.Room.find({ topic: '开源社迎新群' });
+                if (room) {
+                    await room.add(msg.from());
+                    await room.say("欢迎新朋友：" + msg.from().name());
+                    await room.say(msg.from().name() + "的自我介绍：" + msg_text);
+                } else {
+                    console.log("没有找到房间");
+                }
             } else {
                 var reply = Dialog.getReply(msg_text);
                 msg.say(reply);

@@ -13,3 +13,6 @@
 
 [![Join the chat at https://gitter.im/kaiyuanshe/wechat-robot](https://badges.gitter.im/kaiyuanshe/wechat-robot.svg)](https://gitter.im/kaiyuanshe/wechat-robot?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+# 欢迎加这个机器人为好友
+
+![](logo.png)

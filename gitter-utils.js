@@ -1,4 +1,6 @@
 const request = require('request');
+const Parser = require('./msg-parser');
+
 const Gitter_Token = process.env.GITTER_TOKEN;
 
 function getRoomID(topic) {
@@ -16,7 +18,8 @@ function getRoomID(topic) {
     }
 }
 
-exports.sendMsgToGitter = function (msg, text) {
+exports.sendMsgToGitter = async function (bot, msg) {
+    var text = await Parser.getMsgText(bot, msg);
     var room_topic = msg.room().payload.topic;
     var room_id = getRoomID(room_topic);
     if (text == null) {

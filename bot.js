@@ -3,7 +3,9 @@ const { PuppetPadchat } = require('wechaty-puppet-padchat');
 const QRCode = require('qrcode-terminal');
 const Parser = require('./msg-parser');
 const GitterUtils = require('./gitter-utils');
+const CommandUtils = require('./command-utils');
 const Dialog = require('./dialog');
+const DBUtils = require('./db-utils');
 
 const puppet = new PuppetPadchat();
 
@@ -36,25 +38,12 @@ async function onMessage(msg) {
     }
     if (msg.payload) {
         if (msg.room() != null && msg.payload.type != bot.Message.Type.Unknown) {
-            var msg_text = await Parser.getMsgText(bot, msg);
-            GitterUtils.sendMsgToGitter(msg, msg_text);
+	    var room = await msg.room();
+            console.log(room.topic()+":"+room.id);
+            GitterUtils.sendMsgToGitter(bot, msg);
+            CommandUtils.do_room_command(bot, msg);
         } else if (msg.payload.type != bot.Message.Type.Unknown && msg.from().name() != "开源社-bot") {
-            var msg_text = await Parser.getMsgText(bot, msg);
-            console.log(msg_text);
-            if (msg_text.slice(0, 6) == '#join ') {
-                msg_text = msg_text.slice(6);
-                var room = await bot.Room.find({ topic: '开源社迎新群' });
-                if (room) {
-                    await room.add(msg.from());
-                    await room.say("欢迎新朋友：" + msg.from().name());
-                    await room.say(msg.from().name() + "的自我介绍：" + msg_text);
-                } else {
-                    console.log("没有找到房间");
-                }
-            } else {
-                var reply = Dialog.getReply(msg_text);
-                msg.say(reply);
-            }
+	    CommandUtils.do_user_command(bot, msg);
         }
     }
 }
@@ -64,7 +53,10 @@ async function onFriendship(friendship) {
     if (friendship.type() == bot.Friendship.Type.Receive) {
         await friendship.accept();
     } else if (friendship.type() == bot.Friendship.Type.Confirm) {
-        friendship.contact().say(Dialog.greeting);
+	var contact = await friendship.contact();
+        contact.say(Dialog.greeting);
+	DBUtils.save_wechat_friend(contact);
+	CommandUtils.accept_user(bot, await friendship.contact().name());
     }
 }
 
@@ -77,3 +69,24 @@ bot.on('friendship', onFriendship);
 bot.start()
     .then(() => console.log('Starter Bot Started.'))
     .catch(e => console.error(e));
+
+const kue = require('kue');
+const queue = kue.createQueue();
+queue.process("UserApply", 1, async function(job, done){
+  var room = await bot.Room.load("6683911535@chatroom");
+  if(room){
+    room.sync();
+    var text = "有新人申请加入："+job.data.nick_name +"\n"+"申请加入的小组："+job.data.work_group+"\n"+"申请理由与自我介绍："+job.data.introduce;
+    await room.say(text);
+  }
+  done();
+});
+
+queue.process("AddFriend", 1, async function(job, done){
+  var wechat_id = job.data;
+  console.log(wechat_id);
+  var contact = bot.Contact.load(wechat_id);
+  await bot.Friendship.add(contact, "test add friend");
+  done();
+});
+

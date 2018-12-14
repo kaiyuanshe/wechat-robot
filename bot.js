@@ -6,6 +6,7 @@ const GitterUtils = require('./gitter-utils');
 const CommandUtils = require('./command-utils');
 const Dialog = require('./dialog');
 const DBUtils = require('./db-utils');
+const RoomID = require('./roomid.json');
 
 const puppet = new PuppetPadchat();
 
@@ -39,7 +40,7 @@ async function onMessage(msg) {
     if (msg.payload) {
         if (msg.room() != null && msg.payload.type != bot.Message.Type.Unknown) {
 	    var room = await msg.room();
-            console.log(room.topic()+":"+room.id);
+            console.log(await room.topic()+":"+room.id);
             GitterUtils.sendMsgToGitter(bot, msg);
             CommandUtils.do_room_command(bot, msg);
         } else if (msg.payload.type != bot.Message.Type.Unknown && msg.from().name() != "开源社-bot") {
@@ -73,11 +74,24 @@ bot.start()
 const kue = require('kue');
 const queue = kue.createQueue();
 queue.process("UserApply", 1, async function(job, done){
-  var room = await bot.Room.load("6683911535@chatroom");
+  var work_group = job.data.work_group;
+  var room_id = RoomID[work_group];
+  var room = await bot.Room.load(room_id);
   if(room){
     room.sync();
     var text = "有新人申请加入："+job.data.nick_name +"\n"+"申请加入的小组："+job.data.work_group+"\n"+"申请理由与自我介绍："+job.data.introduce;
     await room.say(text);
+  }
+  if (job.data.referee1 && job.data.referee2) {
+    room_id = RoomID["成员发展工作组"];
+    room = await bot.Room.load(room_id);
+    var text = "有新人申请加入：" + job.data.nick_name + "\n" +
+	       "申请加入的小组：" + job.data.work_group + "\n" +
+	       "申请理由与自我介绍：" + job.data.introduce + "\n" +
+	       "推荐人：" + job.data.referee1 + " 和 " + job.data.referee2;
+    if (room){
+      await room.say(text);
+    }
   }
   done();
 });
@@ -90,3 +104,10 @@ queue.process("AddFriend", 1, async function(job, done){
   done();
 });
 
+queue.process("AllFriend", 1, async function(job, done){
+  const list = await bot.Contact.findAll();
+  list.forEach(function(item,index){
+    DBUtils.save_wechat_friend(item);
+  });
+  done();
+});

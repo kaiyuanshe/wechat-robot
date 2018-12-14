@@ -6,10 +6,12 @@ exports.getReply = function (msg) {
   switch(msg) {
     case "help":
     case "h":
-      return "命令格式：#keyword 其他内容\n#join 申请理由。      申请加入开源社，机器人会将你拉入一个预备成员群。\n#projects/#p         列出目前开源社的开源项目。\n#about/#a        关于这个微信机器人的介绍.";
+      return "命令格式：#keyword 其他内容\n#join 申请理由。      申请加入微信机器人爱好者群，机器人会将你拉入一个讨论群。\n#joinkys 申请加入开源社\n#projects 或 #p         列出目前开源社的开源项目。\n#about 或 #a        关于这个微信机器人的介绍.";
+    case "#joinkys":
+      return "访问 http://member.kaiyuanshe.cn/ 提交申请";
     case "#projects":
     case "#p":
-      return "1. KCoin：基于区块链的开源项目激励平台\n2. 开放黑客松：Open Hackathon Platform\n3. 开源社官网：基于Github Pages的开源社官方网站\n4. Wechat-Robot：开源社微信机器人\n#project 序号/#p 序号/#序号，了解更多";
+      return "1. KCoin：基于区块链的开源项目激励平台\n2. 开放黑客松：Open Hackathon Platform\n3. 开源社官网：基于Github Pages的开源社官方网站\n4. Wechat-Robot：开源社微信机器人\n#project 序号 或 #p 序号 或 #序号，了解更多";
     case "#project 1":
     case "#p 1":
     case "#1":

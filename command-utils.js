@@ -4,19 +4,28 @@ const DBUtils = require('./db-utils');
 const RoomID = require('./roomid.json');
 const WorkergroupLeader = require('./workgroup_leader.json');
 
-exports.accept_user = async function (bot, user_name){
+exports.accept_user = async function (bot, user_name, type){
+  console.log(type);
   DBUtils.get_user(user_name, async function (user) {
     if (user){
       var contact = await bot.Contact.load(user.wechat_id);
       if (contact.friend()){
 	var room_id = RoomID[user.work_group];
+	console.log(room_id);
         var room = await bot.Room.load(room_id);
 	var wechat_user = await bot.Contact.load(user.wechat_id);
         if(room){
-          await room.add(wechat_user);
-          await room.say("欢迎新朋友：" + user.nick_name);
-          await room.say(user.nick_name + "的自我介绍：" + user.introduce);
+	  var text = "欢迎新朋友：" + user.nick_name + "\n" + user.nick_name + "的自我介绍：" + user.introduce;
+          room.add(wechat_user);
+          room.say(text);
 	  DBUtils.update_user_status(user.wechat_id, '已加入');
+	  if(type=="正式"){
+	    var formal_room_id = RoomID["正式个人成员群"];
+	    var formal_room = await bot.Room.load(formal_room_id);
+	    formal_room.add(wechat_user);
+	    formal_room.say(text);
+	    DBUtils.update_user_position(user.wechat_id, '正式成员');
+	  }
         }
       }
     }
@@ -51,8 +60,11 @@ exports.do_room_command = async function (bot, msg) {
       if (msg_text.slice(0,8)=="@开源社-bot"){
         msg_text = msg_text.slice(9);
         if (msg_text.slice(0,2)=="接纳" || msg_text.slice(0,2)=="同意"){
-          this.accept_user(bot, msg_text.slice(2));
+          this.accept_user(bot, msg_text.slice(2), "预备");
         }
+	if (msg_text.slice(0,2)=="正式"){
+	  this.accept_user(bot, msg_text.slice(2), "正式");
+	}
       }
     }
   }

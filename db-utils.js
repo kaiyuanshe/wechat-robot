@@ -20,6 +20,7 @@ exports.get_user = function (nick_name, func) {
     nick_name = nick_name.slice(1);
   }
   let query = "select * from users where `nick_name`='" + nick_name + "'";
+  console.log(query);
   db.query(query, (err, result) => {
     if(!err){
       func(result[0]);
@@ -31,6 +32,13 @@ exports.get_user = function (nick_name, func) {
 
 exports.update_user_status = function (wechat_id, user_status, func) {
   let query = "update `users` set `status`='"+user_status+"' where `wechat_id`='"+wechat_id+"'";
+  db.query(query, (err, result) => {
+    if(func) { func(); }
+  });
+}
+
+exports.update_user_position = function (wechat_id, position, func){
+  let query = "update `users` set `position`='"+position+"' where `wechat_id`='"+wechat_id+"'";
   db.query(query, (err, result) => {
     if(func) { func(); }
   });

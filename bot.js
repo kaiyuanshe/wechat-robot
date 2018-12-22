@@ -7,7 +7,7 @@ const CommandUtils = require('./command-utils');
 const Dialog = require('./dialog');
 const DBUtils = require('./db-utils');
 const RoomID = require('./roomid.json');
-
+const Util = require('util');
 const puppet = new PuppetPadchat();
 
 const bot = new Wechaty({
@@ -50,14 +50,14 @@ async function onMessage(msg) {
 }
 
 async function onFriendship(friendship) {
-    console.log(friendship.toString());
+    console.log(Util.inspect(friendship));
     if (friendship.type() == bot.Friendship.Type.Receive) {
         await friendship.accept();
     } else if (friendship.type() == bot.Friendship.Type.Confirm) {
 	var contact = await friendship.contact();
+	await contact.sync();
         contact.say(Dialog.greeting);
 	DBUtils.save_wechat_friend(contact);
-	CommandUtils.accept_user(bot, await friendship.contact().name());
     }
 }
 
@@ -79,7 +79,9 @@ queue.process("UserApply", 1, async function(job, done){
   var room = await bot.Room.load(room_id);
   if(room){
     room.sync();
-    var text = "有新人申请加入："+job.data.nick_name +"\n"+"申请加入的小组："+job.data.work_group+"\n"+"申请理由与自我介绍："+job.data.introduce;
+    var text = "有新人申请加入："+job.data.nick_name +"\n"+"申请加入的小组："+job.data.work_group+"\n"+"申请理由与自我介绍："+job.data.introduce+"\n";
+    text = text + "组长可以@机器人，并发布命令：“接纳@"+job.data.nick_name+"” 或 “同意@"+job.data.nick_name+"” ，机器人将会把他拉入本群。\n";
+    text = text + "如果组长@机器人，并发布命令：“正式@"+job.data.nick_name+"”，机器人将会同时把他拉入本群与开源社正式成员群。";
     await room.say(text);
   }
   if (job.data.referee1 && job.data.referee2) {

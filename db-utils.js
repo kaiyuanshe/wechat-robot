@@ -81,11 +81,11 @@ exports.save_msg = async function (msg) {
   if (mention_list) {
     var mention_id_list = "";
     var mention_name_list = "";
-    mention_list.forEach(function (item, index) {
+    mention_list.forEach(async function (item, index) {
       mention_id_list = mention_id_list + item.id + ",";
       mention_name_list = mention_name_list + await item.name() + ",";
     });
-    fields = fields + "`mention_id_list`,`mention_nane_list`,";
+    fields = fields + "`mention_id_list`,`mention_name_list`,";
     values = values + "'" + mention_id_list + "','" + mention_name_list + "',";
   }
   text = await msg.text();

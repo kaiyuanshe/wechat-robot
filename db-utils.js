@@ -62,7 +62,7 @@ const MessageType = ["Unknown", "Attachment", "Audio", "Contact", "Emoticon", "I
 
 exports.save_msg = async function (msg) {
   var fields = "`type`,";
-  var values = "'" + MessageType[msg.type()] + "',";
+  var values = "'" + MessageType[msg.type()-1] + "',";
   var room = await msg.room();
   if (room) {
     var room_id = room.id;
@@ -89,6 +89,7 @@ exports.save_msg = async function (msg) {
     values = values + "'" + mention_id_list + "','" + mention_name_list + "',";
   }
   text = await msg.text();
+  text = text.replace(/\'/g,"\\\'");
   fields = fields + "`text`,`create_at`";
   values = values + "'" + text + "',CURRENT_TIMESTAMP";
   sql = "INSERT INTO `messages` (" + fields + ") VALUES (" + values + ")";

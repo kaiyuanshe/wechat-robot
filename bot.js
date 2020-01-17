@@ -1,5 +1,5 @@
 const { Wechaty } = require('wechaty');
-const { PuppetPadchat } = require('wechaty-puppet-padchat');
+const { PuppetPadplus } = require('wechaty-puppet-padplus');
 const QRCode = require('qrcode-terminal');
 const Parser = require('./msg-parser');
 const GitterUtils = require('./gitter-utils');
@@ -8,7 +8,8 @@ const Dialog = require('./dialog');
 const DBUtils = require('./db-utils');
 const RoomID = require('./roomid.json');
 const Util = require('util');
-const puppet = new PuppetPadchat();
+
+const puppet = new PuppetPadplus();
 
 const bot = new Wechaty({
     name: "kaiyuanshe",
@@ -43,10 +44,10 @@ async function onMessage(msg) {
             console.log(await room.topic() + ":" + room.id);
             GitterUtils.sendMsgToGitter(bot, msg);
             CommandUtils.do_room_command(bot, msg);
-        } else if (msg.payload.type != bot.Message.Type.Unknown && msg.from().name() != "开源社-bot") {
+        } else if (msg.payload.type != bot.Message.Type.Unknown) {
             CommandUtils.do_user_command(bot, msg);
         }
-        DBUtils.save_msg(msg);
+        // DBUtils.save_msg(msg);
     }
 }
 
@@ -58,6 +59,7 @@ async function onFriendship(friendship) {
         var contact = await friendship.contact();
         await contact.sync();
         contact.say(Dialog.greeting);
+	console.log("add new friend to db");
         DBUtils.save_wechat_friend(contact);
     }
 }

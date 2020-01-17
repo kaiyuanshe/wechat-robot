@@ -1,8 +1,8 @@
 const mysql = require('mysql');
 const db = mysql.createConnection({
   host: 'localhost',
-  user: 'root',
-  password: 'password',
+  user: 'kys',
+  password: 'kys',
   database: 'kaiyuanshe'
 });
 
@@ -50,9 +50,13 @@ exports.save_wechat_friend = async function (user) {
   var nick_name = await user.name();
   console.log(wechat_id + "," + nick_name);
   db.query("SET NAMES utf8mb4", (err, result) => {
-    db.query("insert into `wechat_friends` (wechat_id,nick_name) values ('" + wechat_id + "','" + nick_name + "')", (err1, result1) => {
-      if (err1) {
-        console.log(err1);
+    db.query("select * from wechat_friends where wechat_id='"+wechat_id+"'", (err1, result) => {
+      if(result.length==0){
+        db.query("insert into `wechat_friends` (wechat_id,nick_name) values ('" + wechat_id + "','" + nick_name + "')", (err2, result2) => {
+          if (err2) {
+            console.log(err2);
+          }
+        });
       }
     });
   });
@@ -68,6 +72,7 @@ exports.save_msg = async function (msg) {
     var room_id = room.id;
     var room_topic = await room.topic();
     fields = fields + "`room_id`,`room_topic`,";
+    room_topic = room_topic.replace(/\'/g, "\\\'");
     values = values + "'" + room_id + "','" + room_topic + "',";
   }
   var from = await msg.from();

@@ -1,6 +1,8 @@
 # wechat-robot
 
-这是一个开源社的微信机器人项目，基于[wechaty](http://github.com/chatie/wechaty)开源项目开发。
+[![Powered by Wechaty](https://img.shields.io/badge/Powered%20By-Wechaty-brightgreen.svg)](https://wechaty.js.org)
+
+这是一个开源社的微信机器人项目，基于[Wechaty](http://github.com/wechaty/wechaty)开源项目开发。
 
 # 环境变量
 
